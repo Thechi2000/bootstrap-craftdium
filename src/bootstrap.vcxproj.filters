@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="assets">
+      <UniqueIdentifier>{f7d6df15-29c4-44e8-b23c-4d761b569e3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\cpp">
+      <UniqueIdentifier>{7f003334-92f3-4e1d-bdac-d74c0eddb684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\h">
+      <UniqueIdentifier>{6c0ce8c9-eb17-416b-83be-632e4bdc6e91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\images">
+      <UniqueIdentifier>{876ecb55-3e34-4c58-9e21-bdac6f884cf9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="assets\cpp\main.cpp">
+      <Filter>assets\cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

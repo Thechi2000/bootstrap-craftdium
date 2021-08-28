@@ -4,3 +4,7 @@
 /Debug/
 /x64/
 /bootstrap.aps
+/src/Release/
+/src/Debug/
+/src/x64/
+/bootstrap.aps
