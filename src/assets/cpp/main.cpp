@@ -1,5 +1,6 @@
 #include <SFML/Window.hpp>
 #include <SFML/OpenGL.hpp>
+#include "curl/curl.h"
 
 
 int main()
