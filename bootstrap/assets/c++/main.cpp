@@ -1,12 +1,14 @@
+#include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
+
 
 using namespace std;
 using namespace sf;
 
 int main()
 {
-    RenderWindow window(VideoMode(800, 600), "Test");
-    window.display();
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+    RenderWindow window(VideoMode(385, 110), "Craftdium Updater");
     Event event;
 
     while (window.isOpen())

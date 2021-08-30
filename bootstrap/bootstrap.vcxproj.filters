@@ -7,10 +7,27 @@
     <Filter Include="assets\C++">
       <UniqueIdentifier>{0e1db6f6-7930-4778-bf3e-44cf837843b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="assets\images">
+      <UniqueIdentifier>{5260bb76-0cd4-488c-805e-f2056b3fa6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets\images\icon">
+      <UniqueIdentifier>{c260bf07-f83e-4937-b4cf-c9eefab6a990}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="assets\c++\main.cpp">
       <Filter>assets\C++</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="bootstrap.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\images\icon\icon.ico">
+      <Filter>assets\images\icon</Filter>
+    </Image>
   </ItemGroup>
 </Project>
