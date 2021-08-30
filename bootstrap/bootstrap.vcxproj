@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="assets\c++\Downloader.cpp" />
     <ClCompile Include="assets\c++\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="assets\c++\Downloader.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
