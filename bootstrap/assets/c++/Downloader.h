@@ -10,20 +10,14 @@
 class Downloader : public ProgressBar
 {
 public:
-	// Contains the data needed to start a download
-	struct Download
-	{
-		const char* url;
-		const char* filename;
-	};
 
 	~Downloader();
 
 	// Starts the downloading thread
 	void start();
-	// Adds a download to the queue (even if the thread is already running)
+	// Adds a download to the queue
+	// If the download has already start, this file won't be downloaded
 	void queue(const char* url, const char* filename);
-	void queue(Download download);
 	// Immediatly terminate the downloading thread
 	void stop();
 
@@ -32,7 +26,15 @@ public:
 	static Downloader instance;
 
 private:
+	struct Download
+	{
+		const char* url;
+		const char* filename;
+		long fileSize;
+	};
+
 	friend int __updateDownloaderProgressBar(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
+	static long fileSize(const char* url);
 
 	using ProgressBar::setCurrentValue;
 	using ProgressBar::setMaxValue;
@@ -42,6 +44,7 @@ private:
 
 	std::queue<Download> m_queuedDownloads;
 	sf::Mutex m_queueMutex;
+	long long m_downloadedFileSize;
 	sf::Thread m_downloadThread;
 	bool m_isRunning;
 };

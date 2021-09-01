@@ -7,14 +7,32 @@
 using namespace std;
 using namespace sf;
 
+long Downloader::fileSize(const char* url)
+{
+	CURL* curl;
+	CURLcode res;
+	curl = curl_easy_init();
+
+	curl_easy_setopt(curl, CURLOPT_HEADER, 1);
+	curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+
+	res = curl_easy_perform(curl);
+
+	double length;
+	curl_easy_getinfo(curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length);
+
+	return length;
+}
+
 Downloader::Downloader() :
 	ProgressBar(0, 0, 100, 20),
 	m_queuedDownloads(),
 	m_queueMutex(),
+	m_downloadedFileSize(0),
 	m_downloadThread(&Downloader::threadFunc, this),
 	m_isRunning(false)
-{
-}
+{}
 Downloader::~Downloader()
 {
 	stop();
@@ -43,40 +61,35 @@ void Downloader::stop()
 
 void Downloader::queue(const char* url, const char* filename)
 {
-	queue({ url, filename });
-}
-void Downloader::queue(Download download)
-{
-	m_queueMutex.lock();
-	m_queuedDownloads.push(download);
-	m_queueMutex.unlock();
+	m_queuedDownloads.push({ url, filename, fileSize(url)});
 }
 
 void Downloader::threadFunc()
 {
 	std::queue<Download> downloadsQueue;
 
-	while(true)
+	m_queueMutex.lock();
+
+	long long total = 0;
+	while(!m_queuedDownloads.empty())
 	{
-		m_queueMutex.lock();
-		
-		while(!m_queuedDownloads.empty())
-		{
-			downloadsQueue.push(m_queuedDownloads.front());
-			m_queuedDownloads.pop();
-		}
+		auto& down = m_queuedDownloads.front();
+		total += down.fileSize;
+		downloadsQueue.push(down);
+		m_queuedDownloads.pop();
+	}
+	setMaxValue(total);
 
-		m_queueMutex.unlock();
+	m_queueMutex.unlock();
 
-		while(!downloadsQueue.empty())
-		{
-			auto download = downloadsQueue.front();
-			downloadsQueue.pop();
+	while(!downloadsQueue.empty())
+	{
+		auto& download = downloadsQueue.front();
+		downloadsQueue.pop();
 
-			downloadFile(download.url, download.filename);
-		}
+		downloadFile(download.url, download.filename);
 
-		Sleep(100);
+		m_downloadedFileSize += download.fileSize;
 	}
 }
 
@@ -84,9 +97,7 @@ Downloader Downloader::instance;
 
 int __updateDownloaderProgressBar(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
 {
-	std::cout << dlnow << "/" << dltotal << std::endl;
-	Downloader::instance.setCurrentValue(dlnow);
-	Downloader::instance.setMaxValue(dltotal);
+	Downloader::instance.setCurrentValue(Downloader::instance.m_downloadedFileSize + dlnow);
 	return 0;
 }
 
