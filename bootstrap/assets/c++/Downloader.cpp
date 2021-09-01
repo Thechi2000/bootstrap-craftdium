@@ -1,11 +1,14 @@
 #include "Downloader.h"
 #include <curl/curl.h>
 #include <iostream>
+#include <SFML/Graphics/RenderTarget.hpp>
 #pragma warning(disable : 4996)
 
 using namespace std;
+using namespace sf;
 
 Downloader::Downloader() :
+	ProgressBar(0, 0, 100, 20),
 	m_queuedDownloads(),
 	m_queueMutex(),
 	m_downloadThread(&Downloader::threadFunc, this),
@@ -38,6 +41,10 @@ void Downloader::stop()
 		cout << "[WARNING: Tried to stop the Downloader when it was not running";
 }
 
+void Downloader::queue(const char* url, const char* filename)
+{
+	queue({ url, filename });
+}
 void Downloader::queue(Download download)
 {
 	m_queueMutex.lock();
@@ -75,6 +82,14 @@ void Downloader::threadFunc()
 
 Downloader Downloader::instance;
 
+int __updateDownloaderProgressBar(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
+{
+	std::cout << dlnow << "/" << dltotal << std::endl;
+	Downloader::instance.setCurrentValue(dlnow);
+	Downloader::instance.setMaxValue(dltotal);
+	return 0;
+}
+
 void downloadFile(const char* url, const char* fname)
 {
 	CURL* curl;
@@ -87,6 +102,7 @@ void downloadFile(const char* url, const char* fname)
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 	curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
+	curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, __updateDownloaderProgressBar);
 	res = curl_easy_perform(curl);
 	fclose(fp);
 }

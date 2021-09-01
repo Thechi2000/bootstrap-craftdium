@@ -21,9 +21,11 @@
   <ItemGroup>
     <ClCompile Include="assets\c++\Downloader.cpp" />
     <ClCompile Include="assets\c++\main.cpp" />
+    <ClCompile Include="assets\c++\ProgressBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="assets\c++\Downloader.h" />
+    <ClInclude Include="assets\c++\ProgressBar.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

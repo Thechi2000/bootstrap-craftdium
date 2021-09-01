@@ -21,10 +21,16 @@
     <ClCompile Include="assets\c++\Downloader.cpp">
       <Filter>assets\C++</Filter>
     </ClCompile>
+    <ClCompile Include="assets\c++\ProgressBar.cpp">
+      <Filter>assets\C++</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
     <ClInclude Include="assets\c++\Downloader.h">
+      <Filter>assets\C++</Filter>
+    </ClInclude>
+    <ClInclude Include="assets\c++\ProgressBar.h">
       <Filter>assets\C++</Filter>
     </ClInclude>
   </ItemGroup>

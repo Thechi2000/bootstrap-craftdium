@@ -1,9 +1,13 @@
 #pragma once
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <curl/curl.h>
 #include <queue>
 #include <SFML/System/Thread.hpp>
 #include <SFML/System/Mutex.hpp>
+#include "ProgressBar.h"
 
-class Downloader
+class Downloader : public ProgressBar
 {
 public:
 	// Contains the data needed to start a download
@@ -18,6 +22,7 @@ public:
 	// Starts the downloading thread
 	void start();
 	// Adds a download to the queue (even if the thread is already running)
+	void queue(const char* url, const char* filename);
 	void queue(Download download);
 	// Immediatly terminate the downloading thread
 	void stop();
@@ -27,6 +32,11 @@ public:
 	static Downloader instance;
 
 private:
+	friend int __updateDownloaderProgressBar(void* clientp, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow);
+
+	using ProgressBar::setCurrentValue;
+	using ProgressBar::setMaxValue;
+
 	Downloader();
 	void threadFunc();
 
